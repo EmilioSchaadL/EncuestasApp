@@ -107,8 +107,7 @@ export default function DashboardPage() {
         return { name: optText, votos: votes };
       });
 
-      // Calculamos el porcentaje
-      const statsWithPercentages = optionsStats.map(stat => ({
+      const statsWithPercentages = optionsStats.map((stat : any) => ({
         ...stat,
         porcentaje: totalVotesForQuestion > 0 
           ? ((stat.votos / totalVotesForQuestion) * 100).toFixed(1) 
