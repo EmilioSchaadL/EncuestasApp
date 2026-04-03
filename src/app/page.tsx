@@ -63,7 +63,7 @@ export default function DashboardPage() {
     return selectedSurvey.questions.map((q: any, qIdx: number) => {
       const questionTitle = q.text || q.title || `Pregunta ${qIdx + 1}`;
       const rawOptions = Array.isArray(q.options) ? q.options : [];
-      let optionsList = rawOptions.map(opt => typeof opt === 'object' && opt.text ? opt.text : String(opt));
+      let optionsList = rawOptions.map((opt : any) => typeof opt === 'object' && opt.text ? opt.text : String(opt));
 
       if (optionsList.length === 0) {
         const uniqueAnswers = new Set<string>();
