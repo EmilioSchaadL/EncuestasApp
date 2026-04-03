@@ -8,12 +8,11 @@ import { google } from 'googleapis';
 export async function getGoogleSheets() {
   const target = ['https://www.googleapis.com/auth/spreadsheets'];
 
-  const jwt = new google.auth.JWT(
-    process.env.GOOGLE_CLIENT_EMAIL,
-    undefined,
-    (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
-    target
-  );
+  const jwt = new google.auth.JWT({
+    email: process.env.GOOGLE_CLIENT_EMAIL,
+    key: (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+    scopes: target,
+  });
 
   const sheets = google.sheets({ version: 'v4', auth: jwt });
   return sheets;
