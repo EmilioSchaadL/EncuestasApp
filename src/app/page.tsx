@@ -215,7 +215,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {getQuestionStats().map((q, idx) => (
+              {getQuestionStats().map((q : any, idx : any) => (
                 <div key={idx} className="bg-neutral-900 border border-neutral-800 p-8 rounded-3xl">
                   <h4 className="font-bold text-neutral-400 mb-8 uppercase text-[10px] tracking-[0.2em] border-l-2 border-indigo-500 pl-4">{q.title}</h4>
                   <div className="h-[250px]">
@@ -229,7 +229,7 @@ export default function DashboardPage() {
                         <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
                         
                         <Bar dataKey="votos" radius={[0, 4, 4, 0]} barSize={25}>
-                          {q.stats.map((_, index) => (
+                          {q.stats.map((_ : any, index : any) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Bar>
