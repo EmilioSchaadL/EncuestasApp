@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Survey Generator Pro",
+  title: "App de Encuestas",
   description: "Administración privada de encuestas",
 };
 
