@@ -34,7 +34,7 @@ export default function Navbar() {
   if (pathname === '/' && !isAdmin) return null;
 
   return (
-    <nav className="top-0 md:top-4 left-0 md:left-1/2 md:-translate-x-1/2 z-[100] w-full md:w-auto px-0 md:px-4">
+    <nav className="fixed top-0 md:top-4 left-0 md:left-1/2 md:-translate-x-1/2 z-[100] w-full md:w-auto px-0 md:px-4">
       <div className="bg-neutral-900/90 backdrop-blur-xl border-b md:border border-neutral-800 md:rounded-2xl px-4 py-3 md:p-2 shadow-2xl flex items-center justify-between md:gap-4">
         
         {/* LOGO / ACCESO RÁPIDO */}
