@@ -12,10 +12,14 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Estilos del editor
 
-const ReactQuill: any = dynamic(() => import('react-quill'), { 
+const ReactQuillDynamic = dynamic(() => import('react-quill'), { 
   ssr: false,
   loading: () => <p className="text-neutral-500 text-sm">Cargando editor...</p>
 });
+
+const ReactQuill = (props: any) => {
+  return <ReactQuillDynamic {...props} />;
+};
 
 export default function BuilderPage() {
   const router = useRouter();
