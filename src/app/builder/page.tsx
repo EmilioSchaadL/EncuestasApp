@@ -237,7 +237,7 @@ export default function BuilderPage() {
                           <ReactQuill 
                             theme="snow"
                             value={q.description || ''} 
-                            onChange={(any) => updateQuestion(q.id, { description: any })}
+                            onChange={(content : string) => updateQuestion(q.id, { description: content })}
                             placeholder="Añade viñetas, descripciones, y cambia el tamaño de la letra..."
                             className="h-32 mb-10" // Margen inferior para que no se coma la barra de herramientas
                           />
