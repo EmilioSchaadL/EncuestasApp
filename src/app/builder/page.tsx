@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css'; // Estilos del editor
 
-const ReactQuill = dynamic(() => import('react-quill'), { 
+const ReactQuill: any = dynamic(() => import('react-quill'), { 
   ssr: false,
   loading: () => <p className="text-neutral-500 text-sm">Cargando editor...</p>
 });
@@ -237,7 +237,7 @@ export default function BuilderPage() {
                           <ReactQuill 
                             theme="snow"
                             value={q.description || ''} 
-                            onChange={(content) => updateQuestion(q.id, { description: content })}
+                            onChange={(any) => updateQuestion(q.id, { description: any })}
                             placeholder="Añade viñetas, descripciones, y cambia el tamaño de la letra..."
                             className="h-32 mb-10" // Margen inferior para que no se coma la barra de herramientas
                           />
