@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type QuestionType = 'TEXT' | 'MULTIPLE_CHOICE' | 'SCALE' | 'NUMBER';
+export type QuestionType = 'TEXT' | 'MULTIPLE_CHOICE' | 'SCALE' | 'NUMBER' | 'DROPDOWN' | 'INFO';
 
 export interface Option {
   id: string;
@@ -10,9 +10,11 @@ export interface Option {
 export interface Question {
   id: string;
   text: string;
+  description?: string;
   type: QuestionType;
   categoryId: string;
-  options?: Option[]; // Used only for MULTIPLE_CHOICE
+  options?: Option[];
+   // Used only for MULTIPLE_CHOICE
 }
 
 export interface Category {
