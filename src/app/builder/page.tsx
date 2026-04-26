@@ -242,7 +242,7 @@ export default function BuilderPage() {
                             theme="snow"
                             value={q.description || ''} 
                             onChange={(content : string) => updateQuestion(q.id, { description: content })}
-                            placeholder="Añade viñetas, descripciones, y cambia el tamaño de la letra..."
+                            placeholder="Añade texto para comenzar..."
                             className="h-32 mb-10" // Margen inferior para que no se coma la barra de herramientas
                           />
                         </div>
@@ -318,7 +318,7 @@ export default function BuilderPage() {
                 <div className="w-12 h-12 bg-neutral-900 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                   <Plus size={24} />
                 </div>
-                <span className="font-medium">Añadir Nueva Pregunta o Info</span>
+                <span className="font-medium">Añadir nueva sección</span>
               </button>
             </section>
           </>
