@@ -10,9 +10,9 @@ import { useRouter } from 'next/navigation';
 
 // IMPORTANTE: Importación dinámica para React-Quill en Next.js (Evita errores de SSR)
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css'; // Estilos del editor
+import 'react-quill-new/dist/quill.snow.css'; // Estilos del editor
 
-const ReactQuillDynamic = dynamic(() => import('react-quill'), { 
+const ReactQuillDynamic = dynamic(() => import('react-quill-new'), { 
   ssr: false,
   loading: () => <p className="text-neutral-500 text-sm">Cargando editor...</p>
 });
