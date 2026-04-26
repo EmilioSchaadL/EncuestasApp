@@ -1,1 +1,20 @@
-declare module 'react-quill';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+declare module 'react-quill';declare module 'react-quill' {
+  import * as React from 'react';
+
+  export interface ReactQuillProps {
+    theme?: string;
+    value?: string | null;
+    onChange?: (content: string, delta: any, source: any, editor: any) => void;
+    placeholder?: string;
+    className?: string;
+    modules?: any;
+    formats?: string[];
+    bounds?: string | HTMLElement;
+    children?: React.ReactNode;
+    readOnly?: boolean;
+  }
+
+  const ReactQuill: React.ComponentType<ReactQuillProps>;
+  export default ReactQuill;
+}
