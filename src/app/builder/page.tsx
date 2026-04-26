@@ -8,6 +8,15 @@ import Link from 'next/link';
 import { useUserStore } from '@/store/userStore';
 import { useRouter } from 'next/navigation';
 
+// IMPORTANTE: Importación dinámica para React-Quill en Next.js (Evita errores de SSR)
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css'; // Estilos del editor
+
+const ReactQuill = dynamic(() => import('react-quill'), { 
+  ssr: false,
+  loading: () => <p className="text-neutral-500 text-sm">Cargando editor...</p>
+});
+
 export default function BuilderPage() {
   const router = useRouter();
   const username = useUserStore(state => state.username);
@@ -89,20 +98,17 @@ export default function BuilderPage() {
     const option: Option = {
       id: Math.random().toString(36).substring(2, 9),
       text: 'Nueva Opción'
-      // Quitamos la línea: weight: 1
     };
     addOptionToQuestion(qId, option);
   };
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-indigo-500/30">
-      {/* Background Decor */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-fuchsia-600/10 rounded-full blur-[120px]"></div>
       </div>
 
-      {/* Header Corregido */}
       <header className="sticky top-0 z-50 bg-neutral-950/80 backdrop-blur-md border-b border-neutral-800">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -136,6 +142,7 @@ export default function BuilderPage() {
 
       <main className="max-w-4xl mx-auto px-6 py-12 space-y-8 pb-32">
         {createdUrl ? (
+          // (Tu pantalla de éxito se mantiene igual)
           <div className="bg-neutral-900 border border-neutral-800 rounded-[2rem] p-12 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-500">
             <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
                <CheckCircle size={40} />
@@ -209,24 +216,43 @@ export default function BuilderPage() {
             <section className="space-y-6">
               {questions.map((q, index) => (
                 <div key={q.id} className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl relative group">
-                  <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-neutral-800 text-neutral-500 text-xs font-bold rounded-full flex items-center justify-center border border-neutral-700">
+                  <div className="absolute -left-3 top-6 w-6 h-6 bg-neutral-800 text-neutral-500 text-xs font-bold rounded-full flex items-center justify-center border border-neutral-700">
                     {index + 1}
                   </div>
+                  
                   <div className="flex gap-4 items-start mb-6 pl-2">
-                    <input
-                      type="text"
-                      className="flex-1 bg-transparent text-xl font-semibold outline-none placeholder-neutral-600 border-b border-transparent focus:border-indigo-500/50 py-1 transition-colors"
-                      placeholder="Escribe tu pregunta aquí..."
-                      value={q.text}
-                      onChange={(e) => updateQuestion(q.id, { text: e.target.value })}
-                    />
-                    <button onClick={() => removeQuestion(q.id)} className="text-neutral-500 hover:text-red-400 p-2 hover:bg-neutral-800 rounded-lg transition-colors">
+                    <div className="flex-1 space-y-4">
+                      {/* TÍTULO DE PREGUNTA / INFO */}
+                      <input
+                        type="text"
+                        className="w-full bg-transparent text-xl font-semibold outline-none placeholder-neutral-600 border-b border-transparent focus:border-indigo-500/50 py-1 transition-colors"
+                        placeholder={q.type === 'INFO' ? "Título del bloque de información..." : "Escribe tu pregunta aquí..."}
+                        value={q.text}
+                        onChange={(e) => updateQuestion(q.id, { text: e.target.value })}
+                      />
+                      
+                      {/* NUEVO: EDITOR DE TEXTO ENRIQUECIDO PARA 'INFO' */}
+                      {q.type === 'INFO' && (
+                        <div className="mt-4 bg-white rounded-xl text-black overflow-hidden border border-neutral-300">
+                          <ReactQuill 
+                            theme="snow"
+                            value={q.description || ''} 
+                            onChange={(content) => updateQuestion(q.id, { description: content })}
+                            placeholder="Añade viñetas, descripciones, y cambia el tamaño de la letra..."
+                            className="h-32 mb-10" // Margen inferior para que no se coma la barra de herramientas
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <button onClick={() => removeQuestion(q.id)} className="text-neutral-500 hover:text-red-400 p-2 hover:bg-neutral-800 rounded-lg transition-colors mt-1">
                       <Trash2 size={20} />
                     </button>
                   </div>
+
                   <div className="grid grid-cols-2 gap-4 mb-6 pl-2">
                     <div className="space-y-1.5">
-                      <label className="text-xs text-neutral-500 font-medium">Tipo de Respuesta</label>
+                      <label className="text-xs text-neutral-500 font-medium">Tipo</label>
                       <select
                         className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-neutral-300 outline-none focus:border-indigo-500"
                         value={q.type}
@@ -235,12 +261,14 @@ export default function BuilderPage() {
                         <option value="TEXT">Texto Corto</option>
                         <option value="SCALE">Escala de Valoración</option>
                         <option value="NUMBER">Numérico</option>
-                        {/* Se quitó "(Pesos)" */}
                         <option value="MULTIPLE_CHOICE">Opción Múltiple</option>
+                        {/* NUEVAS OPCIONES */}
+                        <option value="DROPDOWN">Lista Desplegable</option>
+                        <option value="INFO">Bloque de Información</option>
                       </select>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs text-neutral-500 font-medium">Categoría</label>
+                      <label className="text-xs text-neutral-500 font-medium">Categoría (Sección)</label>
                       <select
                         className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-neutral-300 outline-none focus:border-indigo-500"
                         value={q.categoryId}
@@ -250,9 +278,11 @@ export default function BuilderPage() {
                       </select>
                     </div>
                   </div>
-                  {q.type === 'MULTIPLE_CHOICE' && (
+
+                  {/* NUEVO: Las opciones ahora aparecen para MULTIPLE_CHOICE y DROPDOWN */}
+                  {(q.type === 'MULTIPLE_CHOICE' || q.type === 'DROPDOWN') && (
                     <div className="pl-2 border-t border-neutral-800/60 pt-4 mt-2">
-                      <h4 className="text-xs text-neutral-400 font-semibold mb-3">Opciones</h4>
+                      <h4 className="text-xs text-neutral-400 font-semibold mb-3">Opciones de Respuesta</h4>
                       <div className="space-y-2">
                         {q.options?.map((opt) => (
                           <div key={opt.id} className="flex items-center gap-3">
@@ -261,9 +291,8 @@ export default function BuilderPage() {
                               className="flex-1 bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-indigo-500"
                               value={opt.text}
                               onChange={(e) => updateOption(q.id, opt.id, { text: e.target.value })}
-                              placeholder="Opción"
+                              placeholder="Escribe una opción"
                             />
-                            {/* Eliminamos el input numérico del peso que estaba aquí */}
                             <button onClick={() => removeOptionFromQuestion(q.id, opt.id)} className="text-neutral-500 hover:text-red-400">
                               <Trash2 size={16} />
                             </button>
@@ -277,6 +306,7 @@ export default function BuilderPage() {
                   )}
                 </div>
               ))}
+
               <button
                 onClick={handleCreateQuestion}
                 className="w-full py-8 border-2 border-dashed border-neutral-800 rounded-2xl text-neutral-500 hover:text-indigo-400 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all flex flex-col items-center justify-center gap-2 group"
@@ -284,7 +314,7 @@ export default function BuilderPage() {
                 <div className="w-12 h-12 bg-neutral-900 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                   <Plus size={24} />
                 </div>
-                <span className="font-medium">Añadir Nueva Pregunta</span>
+                <span className="font-medium">Añadir Nueva Pregunta o Info</span>
               </button>
             </section>
           </>
